@@ -1,0 +1,145 @@
+### 日志类实现
+
+#### 基础类 `Log` 实现
+
+##### 一、创建一个文件用于在硬盘中持久化数据
+
+```cpp
+auto Logger::create(const std::string_view filename, const std::source_location sourceLocation) -> int {
+    const int fileDescriptor{open(filename.data(), O_CREAT | O_WRONLY | O_APPEND, S_IRUSR | S_IWUSR)};
+    if (fileDescriptor == -1) {
+        throw Exception{
+            Log{Log::Level::fatal, std::error_code{errno, std::generic_category()}.message(), sourceLocation}
+        };
+    }
+
+    return fileDescriptor;
+}
+```
+
+该方法用于创建一个文件，并将日志数据持久化到 `filename` 对应的磁盘文件中。如果文件创建失败，则抛出异常。
+
+##### 二、日志基本格式设置
+
+```cpp
+class Log {
+public:
+    enum class Level : unsigned char { info, warn, error, fatal };
+
+    explicit Log(Level level, std::string &&text, std::source_location sourceLocation = std::source_location::current(),
+                 std::chrono::system_clock::time_point timestamp = std::chrono::system_clock::now(),
+                 std::jthread::id joinThreadId = std::this_thread::get_id()) noexcept;
+
+    [[nodiscard]] auto toString() const -> std::string;
+
+    [[nodiscard]] auto toByte() const -> std::vector<std::byte>;
+
+private:
+    Level level;
+    std::string text;
+    std::source_location sourceLocation;
+    std::chrono::system_clock::time_point timestamp;
+    std::jthread::id joinThreadId;
+};
+```
+
+- 提供了日志级别（`Level`）、日志内容（`text`）、调试上下文（`sourceLocation`）、时间戳（`timestamp`）、线程ID（`joinThreadId`）等信息。
+- 提供了将日志类转换为 `std::string` 的方法。
+- 提供了将日志类序列化为 `std::vector<std::byte>` 类型的方法。
+
+**C++ 语言技巧解析：**
+
+1. **使用 C++23 的 `source_location` 类**：用于保留调试上下文，包括文件名、行号、列号、函数名等信息。
+2. **使用 `std::format` 进行字符串格式化**：虽然代码中未直接使用 `std::format`，但可以考虑在 `toString` 方法中使用。
+
+##### 三、日志类设计与实现
+
+核心数据结构为：
+
+```cpp
+std::vector<Log> logs;
+std::vector<std::byte> buffer;
+```
+
+- `logs` 用于存储日志记录，通过外部提供的 `push` 接口向其中添加元素。
+- `buffer` 用于将 `logs` 中的日志进行字节序列化，提供缓冲区拷贝功能，并异步写入到文件中。
+
+```cpp
+auto Logger::write() -> Awaiter {
+    for (const auto &log : this->logs) {
+        const std::vector bytes{log.toByte()};
+        this->buffer.insert(this->buffer.cend(), bytes.cbegin(), bytes.cend());
+    }
+    this->logs.clear();
+
+    return Awaiter{
+        Submission{this->getFileDescriptor(), IOSQE_FIXED_FILE, 0, 0, Submission::Write{this->buffer, 0}}
+    };
+}
+```
+
+该方法将 `logs` 中的日志序列化为字节，并将字节数据写入缓冲区 `buffer` 中。然后清空 `logs`，并异步写入到文件中。
+
+##### 四、单例类的实现
+
+在软件或服务端中，通常会将日志类 `Logger` 设置为单例类，以保证其不可分割性。C++ 可以使用 CRTP（Curiously Recurring Template Pattern）来实现单例类。
+
+```cpp
+template<typename T>
+class SingleTon {
+private:
+    SingleTon() = default;
+    SingleTon(const SingleTon& other) = delete;
+    SingleTon& operator=(const SingleTon& other) = delete;
+    SingleTon(SingleTon&& other) = delete;
+    SingleTon& operator=(SingleTon&& other) = delete;
+    ~SingleTon() {
+        SingleTonDestory();
+    }
+
+    static T** GetPPtr() {
+        static T* singleton = nullptr;
+        return &singleton;
+    }
+
+public:
+    template<typename... Args>
+    static void SingleTonCreate(Args... args) {
+        if (*GetPPtr() == nullptr) {
+            *GetPPtr() = new T(std::forward<Args>(args)...);
+        } else {
+            std::cout << "Has Created !" << std::endl;
+        }
+    }
+
+    static T* SingleTonGet() {
+        return *GetPPtr();
+    }
+
+    static void SingleTonDestory() {
+        if (*GetPPtr()) {
+            delete *GetPPtr();
+            *GetPPtr() = nullptr;
+            std::cout << "Has Destory !" << std::endl;
+        }
+    }
+};
+
+class Example {
+    friend class SingleTon<Example>;
+private:
+    Example(int v, std::string n) : val(v), name(n) {};
+    Example(const Example& other) = delete;
+    Example& operator=(const Example& other) = delete;
+    Example(Example&& other) = delete;
+    Example& operator=(Example&& other) = delete;
+
+private:
+    int val;
+    std::string name;
+};
+```
+
+上述代码实现了一个单例类 `SingleTon`，通过 CRTP 模式将其应用到具体的类（如 `Example`）。
+
+上述实现在单线程环境中工作良好，但在多线程环境中会发生数据竞争。C++ 没有提供线程安全的容器，因此需要通过加锁或无锁编程算法实现多线程并发下的良好工作。
