@@ -1,0 +1,374 @@
+<!DOCTYPE html><html><head>
+      <title>C++20coroutine探究</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/lihao/.vscode-server/extensions/shd101wyy.markdown-preview-enhanced-0.8.15/crossnote/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<p>本篇探究C++20的协程实现</p>
+<p>一、有栈协程和无栈协程<br>
+C++20的协程是典型的无栈协程的实现，在创建一个协程时，编译器会在堆区分配一块内存区域用于存储协程帧，协程帧中保留了协程的状态信息，包括协程当前的挂起点信息，协程创建时传入的参数，协程内创建的临时变量，在调用co_return(默认)时，协程帧中的参数得到释放，依赖编译器的实现。</p>
+<p>goroutine则是典型的有栈协程的实现，goroutine使用go关键字进行标识，在协程创建的过程中会为分配一块2kb大小的内存空间，如何协程的栈空间不足，则会进行过扩展，因为使用了线程切换的实现思路，协程会保留当前的执行上下文信息，无需使用关键字co_wait等进行挂起点的标识，协程之间可以进行任意的切换。btw，这可能也是协程会和线程进行类比的原因，这样的实现会为协程栈空间大小的选择造成很大的挑战。</p>
+<p>C++20的协程使用了状态机的原理，本质上是一个可重入的函数，通过协程的状态可以跳转到不同的执行逻辑中，在协程对应的汇编码中，存在大量的flag标识和jump指令，实现了协程的跳转。</p>
+<p>二、C++20的协程关键组件<br>
+C++20的协程主要包括三个部分，Task、Promise以及一个Awaiter可等待对象。<br>
+Task为协程的外部封装类，通常Task负责与外部函数进行逻辑计算，一般情况下Task对象中只会保留协程的句柄一个成员函数，通过设置Task对象的外部公用接口，调用coroutine_handle&lt;&gt; handle的内部实现，管理协程与外部逻辑的通信。</p>
+<p>Promise为一个可承诺对象，负责管理协程的生命周期，协程在创建时首先会根据传入的参数创建一个promise对象。除此之外，promise中还能管理协程的需要保留的数据成员，并由外部的Task对象进行通信。Promise定义的协程的生命周期，一个Promise对象需要提供以下几个接口：<br>
+1、初始化挂起</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-constexpr">constexpr</span> <span class="token keyword keyword-auto">auto</span> <span class="token function">initial_suspend</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span> <span class="token punctuation">{</span> <span class="token keyword keyword-return">return</span> std<span class="token double-colon punctuation">::</span>suspend_always<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+</code></pre><p>返回的是一个可等待对象Awaiter，在C++20的协程中，每一个挂起点都是一个可等待的Awaiter对象，具体的实现细节再后续的章节，通常这里的initial_suspend初始化挂起只有两种选择suspend_always或是suspend_never，分别对应积极启动和消极启动的场景。一个典型的用法时使用suspend_never消极启动，再调用编译器提供的resume函数恢复协程的执行，再这之前可以进行promise内部对象的初始化。</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-constexpr">constexpr</span> <span class="token keyword keyword-auto">auto</span> <span class="token function">final_suspend</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span> <span class="token punctuation">{</span> <span class="token keyword keyword-return">return</span> std<span class="token double-colon punctuation">::</span>suspend_always<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+</code></pre><p>协程的最终挂起点，再协程执行co_return操作后会执行，负责协程的最终挂起，同initial_suspend一样，语言提供了suspend_always和suspend_never的两种实现，在suspend_never的场景下，协程会立即销毁等效于调用coroutine_handle的destory函数，销毁协程对象，使得协程句柄handle变为无效值，这个时候如果外部的Task对象调用了提供的destory接口，就会因为两次销毁导致协程句柄的悬空引用，造成访问到了无效的内存空间，导致进程崩溃。而在suspend_always则是比较通用的实现，最终挂起协程，由外部的Task对象负责管理其生命周期，在析构函数中调用handle的destory函数可以实现协程的RAII管理，配合上智能指针可以实现在不同代码逻辑的传递，同时使用suspend_always可以在执行完毕之后，有充分的时间从promise对象中返回得到的异步执行的结果。</p>
+<p>eg.协程中coroutine_handle&lt;promise_type&gt;提供了done()数据成员，用于判断协程是否执行完成</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-auto">auto</span> Task<span class="token double-colon punctuation">::</span>promise_type<span class="token double-colon punctuation">::</span><span class="token function">get_return_object</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> Task <span class="token punctuation">{</span>
+    <span class="token keyword keyword-return">return</span> Task<span class="token punctuation">{</span>std<span class="token double-colon punctuation">::</span><span class="token class-name">coroutine_handle</span><span class="token operator">&lt;</span>promise_type<span class="token operator">&gt;</span><span class="token double-colon punctuation">::</span><span class="token function">from_promise</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token keyword keyword-this">this</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><p>promise的返回对象，通过调用编译器提供的from_promise接口实现了从promise_type对象向coroutine_handle&lt;promise_type&gt;对象的转变，coroutine_handle&lt;&gt;是一个模板类，promise_type可以是用户自定义的promise类型，然后使用Task的默认构造函数实现了协程外部对象Task的构建，在协程帧创建之后则会调用该函数实现外部Task的构建。</p>
+<p>如果需要调用co_yield、co_return则需要实现以下几个接口。</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-auto">auto</span> <span class="token function">yield_value</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> ret<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: yield_value called with value "</span> <span class="token operator">&lt;&lt;</span> ret <span class="token operator">&lt;&lt;</span> <span class="token string">"."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    mRetValue <span class="token operator">=</span> ret<span class="token punctuation">;</span>
+    <span class="token keyword keyword-return">return</span> std<span class="token double-colon punctuation">::</span><span class="token function">suspend_always</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><p>调用了yield_value(co_yield)的协程也可以成为生成器，将创建好的对象保留在promise的数据成员mRetValue中，同时将协程挂起，由外部的task调用相关的实现与外部的逻辑进行通信。</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-void">void</span> <span class="token function">return_void</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: return_void called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    mRetValue <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword keyword-void">void</span> <span class="token function">return_value</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> val<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: return_void called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    mRetValue <span class="token operator">=</span> val<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><p>上述分别对应了协程的最终返回值co_return和co_return val的实现，将最终的结果保留到协程的数据成员mRetValue中。</p>
+<p>3、Awaiter对象<br>
+一个Awaiter对象需要实现以下三个接口</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-constexpr">constexpr</span> <span class="token keyword keyword-auto">auto</span> <span class="token function">await_ready</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span> <span class="token punctuation">{</span> <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+</code></pre><p>await_ready返回一个bool值，用于判断当前协程的状态是否需要挂起。</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-auto">auto</span> <span class="token function">await_suspend</span><span class="token punctuation">(</span>std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span>Task<span class="token double-colon punctuation">::</span>promise_type<span class="token operator">&gt;</span> handle<span class="token punctuation">)</span>
+</code></pre><p>handle参数为当前执行的协程句柄，典型的做法是保留到Awaiter的数据成员的coroutine_handle&lt;promise_type&gt;中，便于下次唤醒对应的协程，或是将Awaiter对象中的参数保留到promise中，实现协程的传递。await_suspend的返回值可以是一个bool值、void和另一个协程句柄。bool值、void都用于标识当前的协程是否需要继续执行，返回coroutine_handle等效于执行协程的resume函数恢复，不在函数体中执行可以有效避免协程反复递归造成的栈溢出问题。</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token keyword keyword-auto">auto</span> <span class="token function">await_resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span>
+</code></pre><p>协程调用resume恢复执行后，会首先从挂起点执行await_resume()，这里如果需要通过这里的Awaiter返回对应的结果与外部的coroutine实现通信，返回异步执行的结果。</p>
+<p>二、以下通过一个示例解决协程的执行流程的问题</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;coroutine&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+
+<span class="token keyword keyword-using">using</span> <span class="token keyword keyword-namespace">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword keyword-struct">struct</span> <span class="token class-name">RepeatAwaiter</span> <span class="token comment">// awaiter (raw pointer) / awaitable (operator-&gt;)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword keyword-bool">bool</span> <span class="token function">await_ready</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"RepeatAwaiter: await_ready called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span><span class="token operator">&gt;</span> <span class="token function">await_suspend</span><span class="token punctuation">(</span>
+        std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span><span class="token operator">&gt;</span> coroutine<span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>coroutine<span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            cout <span class="token operator">&lt;&lt;</span> <span class="token string">"RepeatAwaiter: coroutine is done, returning noop_coroutine."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+            <span class="token keyword keyword-return">return</span> std<span class="token double-colon punctuation">::</span><span class="token function">noop_coroutine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword keyword-else">else</span>
+        <span class="token punctuation">{</span>
+            cout <span class="token operator">&lt;&lt;</span> <span class="token string">"RepeatAwaiter: coroutine is not done, returning the same coroutine."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+            <span class="token keyword keyword-return">return</span> coroutine<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-void">void</span> <span class="token function">await_resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"RepeatAwaiter: resuming coroutine."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword keyword-struct">struct</span> <span class="token class-name">RepeatAwaitable</span> <span class="token comment">// awaitable (operator-&gt;)</span>
+<span class="token punctuation">{</span>
+    RepeatAwaiter <span class="token keyword keyword-operator">operator</span> <span class="token keyword keyword-co_await">co_await</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"RepeatAwaitable: creating RepeatAwaiter."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> <span class="token function">RepeatAwaiter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword keyword-struct">struct</span> <span class="token class-name">PreviousAwaiter</span>
+<span class="token punctuation">{</span>
+    std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span><span class="token operator">&gt;</span> mPrevious<span class="token punctuation">;</span>
+
+    <span class="token keyword keyword-bool">bool</span> <span class="token function">await_ready</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"PreviousAwaiter: await_ready called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span><span class="token operator">&gt;</span> <span class="token function">await_suspend</span><span class="token punctuation">(</span>
+        std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span><span class="token operator">&gt;</span> coroutine<span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>mPrevious<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            cout <span class="token operator">&lt;&lt;</span> <span class="token string">"PreviousAwaiter: Resuming previous coroutine."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+            <span class="token keyword keyword-return">return</span> mPrevious<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword keyword-else">else</span>
+        <span class="token punctuation">{</span>
+            cout <span class="token operator">&lt;&lt;</span> <span class="token string">"PreviousAwaiter: No previous coroutine, returning noop_coroutine."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+            <span class="token keyword keyword-return">return</span> std<span class="token double-colon punctuation">::</span><span class="token function">noop_coroutine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-void">void</span> <span class="token function">await_resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"PreviousAwaiter: Resuming coroutine after previous coroutine."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword keyword-struct">struct</span> <span class="token class-name">Promise</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword keyword-auto">auto</span> <span class="token function">initial_suspend</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: initial_suspend called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> std<span class="token double-colon punctuation">::</span><span class="token function">suspend_always</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-auto">auto</span> <span class="token function">final_suspend</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-noexcept">noexcept</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: final_suspend called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> PreviousAwaiter<span class="token punctuation">{</span>mPrevious<span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-void">void</span> <span class="token function">unhandled_exception</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: unhandled_exception called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token keyword keyword-throw">throw</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-auto">auto</span> <span class="token function">yield_value</span><span class="token punctuation">(</span><span class="token keyword keyword-int">int</span> ret<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: yield_value called with value "</span> <span class="token operator">&lt;&lt;</span> ret <span class="token operator">&lt;&lt;</span> <span class="token string">"."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        mRetValue <span class="token operator">=</span> ret<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> std<span class="token double-colon punctuation">::</span><span class="token function">suspend_always</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-void">void</span> <span class="token function">return_void</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: return_void called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        mRetValue <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span>Promise<span class="token operator">&gt;</span> <span class="token function">get_return_object</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Promise: get_return_object called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> std<span class="token double-colon punctuation">::</span><span class="token class-name">coroutine_handle</span><span class="token operator">&lt;</span>Promise<span class="token operator">&gt;</span><span class="token double-colon punctuation">::</span><span class="token function">from_promise</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token keyword keyword-this">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-int">int</span> mRetValue <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span><span class="token operator">&gt;</span> mPrevious <span class="token operator">=</span> <span class="token keyword keyword-nullptr">nullptr</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword keyword-struct">struct</span> <span class="token class-name">Task</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword keyword-using">using</span> promise_type <span class="token operator">=</span> Promise<span class="token punctuation">;</span>
+
+    <span class="token function">Task</span><span class="token punctuation">(</span>std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span>promise_type<span class="token operator">&gt;</span> coroutine<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token function">mCoroutine_</span><span class="token punctuation">(</span>coroutine<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Task: Task created."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">Task</span><span class="token punctuation">(</span>Task <span class="token operator">&amp;&amp;</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token keyword keyword-delete">delete</span><span class="token punctuation">;</span>
+
+    <span class="token operator">~</span><span class="token function">Task</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Task: Task destroyed."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        mCoroutine_<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span>promise_type<span class="token operator">&gt;</span> mCoroutine_<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword keyword-struct">struct</span> <span class="token class-name">WorldTask</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword keyword-using">using</span> promise_type <span class="token operator">=</span> Promise<span class="token punctuation">;</span>
+
+    <span class="token function">WorldTask</span><span class="token punctuation">(</span>std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span>promise_type<span class="token operator">&gt;</span> coroutine<span class="token punctuation">)</span>
+        <span class="token operator">:</span> <span class="token function">mCoroutine_</span><span class="token punctuation">(</span>coroutine<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"WorldTask: WorldTask created."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">WorldTask</span><span class="token punctuation">(</span>WorldTask <span class="token operator">&amp;&amp;</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token keyword keyword-delete">delete</span><span class="token punctuation">;</span>
+
+    <span class="token operator">~</span><span class="token function">WorldTask</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"WorldTask: WorldTask destroyed."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        mCoroutine_<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-struct">struct</span> <span class="token class-name">WorldAwaiter</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword keyword-bool">bool</span> <span class="token function">await_ready</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+        <span class="token punctuation">{</span>
+            cout <span class="token operator">&lt;&lt;</span> <span class="token string">"WorldAwaiter: await_ready called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+            <span class="token keyword keyword-return">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span><span class="token operator">&gt;</span> <span class="token function">await_suspend</span><span class="token punctuation">(</span>
+            std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span><span class="token operator">&gt;</span> coroutine<span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+        <span class="token punctuation">{</span>
+            cout <span class="token operator">&lt;&lt;</span> <span class="token string">"WorldAwaiter: await_suspend called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+            mCoroutine_<span class="token punctuation">.</span><span class="token function">promise</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mPrevious <span class="token operator">=</span> coroutine<span class="token punctuation">;</span>
+            <span class="token keyword keyword-return">return</span> mCoroutine_<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword keyword-void">void</span> <span class="token function">await_resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-const">const</span> <span class="token keyword keyword-noexcept">noexcept</span>
+        <span class="token punctuation">{</span>
+            cout <span class="token operator">&lt;&lt;</span> <span class="token string">"WorldAwaiter: await_resume called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span>promise_type<span class="token operator">&gt;</span> mCoroutine_<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token keyword keyword-auto">auto</span> <span class="token keyword keyword-operator">operator</span> <span class="token keyword keyword-co_await">co_await</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"WorldTask: operator co_await called."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+        <span class="token keyword keyword-return">return</span> WorldAwaiter<span class="token punctuation">{</span>mCoroutine_<span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    std<span class="token double-colon punctuation">::</span>coroutine_handle<span class="token operator">&lt;</span>promise_type<span class="token operator">&gt;</span> mCoroutine_<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+WorldTask <span class="token function">world</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"world: starting execution."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_yield">co_yield</span> <span class="token number">422</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"world: yielded 422."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_yield">co_yield</span> <span class="token number">444</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"world: yielded 444."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_return">co_return</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+Task <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"hello: constructing worldTask."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    WorldTask worldTask <span class="token operator">=</span> <span class="token function">world</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"hello: constructed worldTask, waiting for world."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_await">co_await</span> worldTask<span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"hello: received return from world "</span> <span class="token operator">&lt;&lt;</span> worldTask<span class="token punctuation">.</span>mCoroutine_<span class="token punctuation">.</span><span class="token function">promise</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mRetValue <span class="token operator">&lt;&lt;</span> <span class="token string">"."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_await">co_await</span> worldTask<span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"hello: received return from world "</span> <span class="token operator">&lt;&lt;</span> worldTask<span class="token punctuation">.</span>mCoroutine_<span class="token punctuation">.</span><span class="token function">promise</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mRetValue <span class="token operator">&lt;&lt;</span> <span class="token string">"."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"hello: yielding 42."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_yield">co_yield</span> <span class="token number">42</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"hello: yielding 12."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_yield">co_yield</span> <span class="token number">12</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"hello: yielding 6."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_yield">co_yield</span> <span class="token number">6</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"hello: ends execution."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-co_return">co_return</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword keyword-int">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"main: starting hello coroutine."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    Task t <span class="token operator">=</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"main: created hello task."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span> <span class="token comment">// Task created, coroutine not started</span>
+    <span class="token keyword keyword-while">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>t<span class="token punctuation">.</span>mCoroutine_<span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        t<span class="token punctuation">.</span>mCoroutine_<span class="token punctuation">.</span><span class="token function">resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"main: received hello result "</span> <span class="token operator">&lt;&lt;</span> t<span class="token punctuation">.</span>mCoroutine_<span class="token punctuation">.</span><span class="token function">promise</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mRetValue <span class="token operator">&lt;&lt;</span> <span class="token string">"."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"main: hello coroutine completed."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token keyword keyword-return">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><p>其执行结果如下：</p>
+<p>main: starting hello coroutine.<br>
+Promise: get_return_object called.<br>
+Promise: initial_suspend called.<br>
+Task: Task created.<br>
+main: created hello task.<br>
+hello: constructing worldTask.<br>
+Promise: get_return_object called.<br>
+Promise: initial_suspend called.<br>
+WorldTask: WorldTask created.<br>
+hello: constructed worldTask, waiting for world.<br>
+WorldTask: operator co_await called.<br>
+WorldAwaiter: await_ready called.<br>
+WorldAwaiter: await_suspend called.<br>
+world: starting execution.<br>
+Promise: yield_value called with value 422.<br>
+main: received hello result 0.<br>
+WorldAwaiter: await_resume called.<br>
+hello: received return from world 422.<br>
+WorldTask: operator co_await called.<br>
+WorldAwaiter: await_ready called.<br>
+WorldAwaiter: await_suspend called.<br>
+world: yielded 422.<br>
+Promise: yield_value called with value 444.<br>
+main: received hello result 0.<br>
+WorldAwaiter: await_resume called.<br>
+hello: received return from world 444.<br>
+hello: yielding 42.<br>
+Promise: yield_value called with value 42.<br>
+main: received hello result 42.<br>
+hello: yielding 12.<br>
+Promise: yield_value called with value 12.<br>
+main: received hello result 12.<br>
+hello: yielding 6.<br>
+Promise: yield_value called with value 6.<br>
+main: received hello result 6.<br>
+hello: ends execution.<br>
+Promise: return_void called.<br>
+WorldTask: WorldTask destroyed.<br>
+Promise: final_suspend called.<br>
+PreviousAwaiter: await_ready called.<br>
+PreviousAwaiter: No previous coroutine, returning noop_coroutine.<br>
+main: received hello result 20.<br>
+main: hello coroutine completed.<br>
+Task: Task destroyed.</p>
+
+      </div>
+      <div class="md-sidebar-toc"></div>
+      <a id="sidebar-toc-btn">≡</a>
+    
+    
+    
+    
+    
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  
+    </body></html>
