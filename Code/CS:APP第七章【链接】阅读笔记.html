@@ -1,0 +1,147 @@
+<!DOCTYPE html><html><head>
+      <title>CS:APP第七章【链接】阅读笔记 copy</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/lihao/.vscode-server/extensions/shd101wyy.markdown-preview-enhanced-0.8.15/crossnote/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<p>本章是对《CS：APP》第7章链接的阅读笔记，包括一个应用程序是如何加载到实际运行的。</p>
+<p><strong>一、编译器驱动程序</strong><br>
+编译器驱动程序包括语言预处理器，编译器，汇编器和链接器。<br>
+<img src="image-1.png" alt="alt text"></p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code>gcc <span class="token operator">-</span><span class="token number">0</span>g prog main<span class="token punctuation">.</span>c sum<span class="token punctuation">.</span>c
+</code></pre><p>首先是预处理器，驱动程序将源程序翻译成一个ASCII码的中间文件.i，接着是编译器，将.i文件翻译成一个ASCII码的汇编语言文件.s，然后使用汇编器将main.s翻译成一个可重定位的目标文件.o。上数对驱动程序对单个翻译单元所做的事。最后运行链接器程序将所有的.om目标文件组合起来创建一个可执行的目标文件，后续通过./进行执行。</p>
+<p><strong>二、静态链接和动态链接</strong><br>
+链接器将一组可重定位目标文件作为输入，生成一个完全链接的、可以加载和运行的可执行目标文件。目标文件有多个代码和数据节组成，指令、初始化的数据、未初始化的数据。连接器的两个主要的工作是：符号解析和重定位。</p>
+<p>目标文件主要包括以下几个部分：</p>
+<p><img src="image-2.png" alt="alt text"><br>
+.text: 已编译程序的机器代码。<br>
+.rodata: 只读数据.<br>
+.data: 已初始化的全局和静态变量。<br>
+.bss: 未初始化的全局和静态 C 变量，以及所有被初始化为 0 的全局或静态变量。在目标文件中这个节不占据实际的空间，它仅仅是一个占位符。</p>
+<p>2、符号和符号表:<br>
+全局符号：<br>
+由模块 m 定义并能被其他模块引用的全局符号：对应于非静态的 C 函数和全局变量。例子：int global_var;，void global_func();</p>
+<p>外部符号：<br>
+由其他模块定义并被模块 m 引用的全局符号：这些符号称为外部符号。对应于在其他模块中定义的非静态 C 函数和全局变量。例子：extern int external_var;，extern void external_func();</p>
+<p>局部符号：<br>
+只被模块 m 定义和引用的局部符号：对应于带 static 属性的 C 函数和全局变量。这些符号在模块 m 中任何位置都可见，但不能被其他模块引用。例子：static int local_var;，static void local_func();</p>
+<p>3、符号解析<br>
+对全局符号的引用时，当编译器遇到一个在当前模块中未定义的符号时，会假设该符号在其他模块中定义。链接器在所有输入模块中查找该符号的定义。如果找不到定义，链接器输出一条错误信息并终止。</p>
+<p>在编译过程中，编译器向汇编器输出每个全局符号，标记为强（strong）或弱（weak），汇编器将此信息编码在可重定位目标文件的符号表中。</p>
+<p>符号的强弱属性：<br>
+强符号：函数和已初始化的全局变量。弱符号：未初始化的全局变量。</p>
+<p>多重定义的符号处理规则：<br>
+规则 1：不允许有多个同名的强符号。<br>
+规则 2：如果有一个强符号和多个弱符号同名，选择强符号。<br>
+规则 3：如果有多个弱符号同名，从这些弱符号中任意选择一个。</p>
+<p>与静态库的链接：<br>
+<img src="image-3.png" alt="alt text"></p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code>gcc <span class="token operator">-</span>c addvec<span class="token punctuation">.</span>c multvec<span class="token punctuation">.</span>c
+ar rcs libvector<span class="token punctuation">.</span>a addvec<span class="token punctuation">.</span>o multvec<span class="token punctuation">.</span>o
+gcc <span class="token operator">-</span>c main2<span class="token punctuation">.</span>c
+gcc <span class="token operator">-</span><span class="token keyword keyword-static">static</span> <span class="token operator">-</span>o prog2c main2<span class="token punctuation">.</span>o <span class="token punctuation">.</span><span class="token operator">/</span>libvector<span class="token punctuation">.</span>a
+</code></pre><p>4、重定位程序<br>
+一旦链接器完成了符号解析这一步，就把代码中的每个符号引用和正好一个符号定义关联起来。<br>
+重定位步骤包括以下两个主要阶段：<br>
+链接器将所有相同类型的节合并为同一类型的新聚合节，并为每个符号分配运行时地址。</p>
+<p>合并节：<br>
+链接器将来自所有输入模块的相同类型的节合并成一个节。例如，所有输入模块的 .data 节被合并成一个 .data 节，成为输出的可执行目标文件的一部分。<br>
+分配运行时内存地址：<br>
+链接器为新的聚合节、输入模块定义的每个节以及输入模块定义的每个符号分配运行时内存地址。完成这一步后，程序中的每条指令和全局变量都将有唯一的运行时内存地址。</p>
+<p>重定位节中的符号引用<br>
+在这一步中，链接器修改代码节和数据节中对每个符号的引用，使其指向正确的运行时地址。</p>
+<p>通过这两个步骤，链接器完成了程序的重定位，确保所有符号引用都能正确地指向其定义的运行时地址。<br>
+完成后的ELF文件为：<br>
+<img src="image-4.png" alt="alt text"></p>
+<p><strong>三、加载可执行目标文件</strong></p>
+<p>Linux 系统<br>
+中的每个程序都运行在一个进程上下文中，有自己的虚拟地址空间。当 shell 运行一个程序时，父 shell 进程生成一个子进程，它是父进程的一个复制。子进程通过统调 用启动加栽器。加载器删除子进程现有的 虚拟内存段，并创建一组新的代码、数据、堆和栈段。新的栈和堆段被初始化为零。通过将虚拟地址空间 中的页映射到 可执行文件的页大小的片chunk, 新的代码和数据段被初始化为可执行文件的内容。最后，加载器跳转到_start地址，它最终会调用应用程序的 main 函数。除了一些头部信息，在加载过程中没有任何从磁盘到内存的数据复制。直到 CPU 引 用一个被映射的虚拟页时才会进行复制，此时，操作系统利用它的页面调度机制自动将页面从磁盘传送到内存。<br>
+<img src="image-5.png" alt="alt text"></p>
+<p><strong>四、动态链接共享库</strong><br>
+共享库是解决静态库缺陷的一种现代创新产物。它是一个目标模块，在运行或加载时，可以加载到任意的内存地址，并与内存中的程序链接起来。这个过程称为动态链接（Dynamic  Linking），由动态链接器（Dynamic Linker）程序执行。<br>
+<img src="image-6.png" alt="alt text"></p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp cpp"><code>gcc <span class="token operator">-</span>shared <span class="token operator">-</span>fPIC <span class="token operator">-</span>o libexample<span class="token punctuation">.</span>so example<span class="token punctuation">.</span>c
+gcc <span class="token operator">-</span>o main main<span class="token punctuation">.</span>c <span class="token operator">-</span>L<span class="token punctuation">.</span> <span class="token operator">-</span>lexample
+<span class="token keyword keyword-export">export</span> LD_LIBRARY_PATH<span class="token operator">=</span><span class="token punctuation">.</span>
+<span class="token punctuation">.</span><span class="token operator">/</span>main
+</code></pre><p>共享库（Shared Library）的基本思路是在创建可执行文件时，静态执行一些链接，然后在程序加载时，动态完成链接过程。这个过程的关键在于：<br>
+静态链接（部分）：<br>
+在编译和链接可执行文件时，链接器会进行一些预处理工作，记录对共享库的引用信息。这些信息包括重定位信息和符号表信息，但并不实际复制共享库的代码和数据到可执行文件中。</p>
+<p>动态链接（加载时）：<br>
+在程序加载时，动态链接器（Dynamic Linker）会解析这些重定位和符号表信息，将共享库加载到内存中，并将其与程序动态链接。这个过程在运行时完成，确保程序可以正确地调用共享库中的函数和使用共享库中的数据。</p>
+<p>运行时打桩机制：LD_PRELOAD<br>
+LD_PRELOAD 是一个非常强大的机制，允许在运行时对任意可执行文件进行打桩（interposing）。通过设置 LD_PRELOAD 环境变量，可以指定一个或多个共享库，这些库中的函数会在程序加载时优先于标准库中的同名函数被解析和调用。这使得你可以在不修改程序源代码或可重定位对象文件的情况下，对函数进行拦截和替换。</p>
+<p>基本原理<br>
+设置 LD_PRELOAD 环境变量：在程序加载和执行之前，设置 LD_PRELOAD 环境变量，指定一个或多个共享库的路径。动态链接器（<a href="http://ld-linux.so">ld-linux.so</a>）在解析未定义的符号引用时，会首先搜索 LD_PRELOAD 中指定的库。</p>
+<p>动态链接器的行为：<br>
+动态链接器在解析符号时，会按以下顺序搜索：LD_PRELOAD 中指定的库。程序自身的可执行文件。标准库（如 <a href="http://libc.so">libc.so</a>）和其他已指定的库。</p>
+<p><strong>五、小节</strong><br>
+链接是将多个目标文件（二进制文件）合并成一个可执行文件的过程。链接可以在编译时、加载时和运行时完成。链接器处理的目标文件有三种形式：可重定位的、可执行的和共享的。</p>
+<p>目标文件的三种形式<br>
+可重定位的目标文件：包含二进制代码和数据，可以在编译时与其他可重定位目标文件合并成一个可执行文件。由静态链接器处理，生成可执行的目标文件。</p>
+<p>可执行的目标文件：<br>
+包含二进制代码和数据，可以直接加载到内存中并执行。由静态链接器生成。</p>
+<p>共享的目标文件（共享库）：<br>
+可以在运行时由动态链接器加载和链接，或者隐含地在程序加载和开始执行时加载，或者通过 dlopen 函数动态加载。由动态链接器处理。</p>
+<p>链接器的任务<br>
+链接器的主要任务包括符号解析和重定位：<br>
+符号解析：<br>
+将目标文件中的每个全局符号绑定到一个唯一的定义。确保每个符号引用都能正确解析到其定义。</p>
+<p>重定位：确定每个符号的最终内存地址，并修改对这些符号的引用。确保程序在运行时能够正确访问这些符号。</p>
+<p>静态链接<br>
+静态链接器：由编译驱动程序（如 GCC）调用，将多个可重定位目标文件合并成一个可执行目标文件。<br>
+多重定义：多个目标文件可以定义相同的符号，链接器解析这些多重定义的规则可能会引入微妙的错误。<br>
+静态库：多个目标文件可以被连接到一个单独的静态库中，链接器用库来解析其他目标模块中的符号引用。<br>
+符号扫描顺序：链接器通常按从左到右的顺序扫描库文件，以解析符号引用，这可能导致链接时错误。</p>
+<p>加载和动态链接<br>
+加载器：将可执行文件的内容映射到内存，并运行程序。<br>
+部分链接的可执行文件：链接器可能生成部分链接的可执行文件，其中包含对共享库中例程和数据的未解析引用。<br>
+动态链接器：在加载时，加载器将部分链接的可执行文件映射到内存，并调用动态链接器完成链接任务（加载共享库和重定位程序中的引用）。</p>
+<p>运行时动态链接<br>
+位置无关代码（PIC）：被编译为位置无关代码的共享库可以加载到任何内存地址，并由多个进程共享。<br>
+动态链接器：应用程序可以在运行时使用动态链接器加载、链接和访问共享库的函数和数据。</p>
+
+      </div>
+      <div class="md-sidebar-toc"></div>
+      <a id="sidebar-toc-btn">≡</a>
+    
+    
+    
+    
+    
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  
+    </body></html>
